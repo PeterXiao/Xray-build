@@ -14,7 +14,7 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v3
       with:
-        go-version: 1.50
+        go-version: 1.25
         check-latest: true
 
     - name: Get Latest Release
