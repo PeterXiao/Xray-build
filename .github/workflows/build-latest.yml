@@ -50,6 +50,17 @@ jobs:
         echo "https://github.com/XTLS/Xray-core/commit/$RELEASE_COMMITS"
 
   runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # Include amd64 on all platforms.
+        goos: [windows, linux]
+        goarch: [amd64, 386]
+        patch-assetname: [""]
+        exclude:
+          # Exclude i386 on darwin
+          - goarch: 386
+            goos: darwin
+      fail-fast: false
     env:
       GOOS: ${{ matrix.goos }}
       GOARCH: ${{ matrix.goarch }}
