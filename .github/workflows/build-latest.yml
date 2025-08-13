@@ -4,23 +4,7 @@ on:
     types: started
   workflow_dispatch:
 
-
 jobs:
-  build:
-    needs: check-assets
-    permissions:
-      contents: write
-    strategy:
-      matrix:
-        # Include amd64 on all platforms.
-        goos: [windows, linux]
-        goarch: [amd64, 386]
-        patch-assetname: [""]
-        exclude:
-          # Exclude i386 on darwin
-          - goarch: 386
-            goos: darwin
-      fail-fast: false
   build-xray-core:
     if: github.event.repository.owner.id == github.event.sender.id
     runs-on: ubuntu-latest
@@ -49,106 +33,87 @@ jobs:
         echo "release_commits=$RELEASE_COMMITS" >> $GITHUB_ENV
         echo "https://github.com/XTLS/Xray-core/commit/$RELEASE_COMMITS"
 
-  runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        # Include amd64 on all platforms.
-        goos: [windows, linux]
-        goarch: [amd64, 386]
-        patch-assetname: [""]
-        exclude:
-          # Exclude i386 on darwin
-          - goarch: 386
-            goos: darwin
-      fail-fast: false
-    env:
-      GOOS: ${{ matrix.goos }}
-      GOARCH: ${{ matrix.goarch }}
-      GOARM: ${{ matrix.goarm }}
-      CGO_ENABLED: 0
-    steps:
-      - name: Checkout codebase
-        uses: actions/checkout@v4
+    - name: Build for AMD64
+      run: |
+        cd Xray-core
+        go env -w CGO_ENABLED=0 GOOS=linux GOARCH=amd64
+        go build -v -o xray-linux-amd64 -trimpath -ldflags "-s -w -buildid=" ./main
+        tar -cJvf xray-linux-amd64.tar.xz xray-linux-amd64
+        upx -9 xray-linux-amd64
+        echo "MD5= $(md5sum xray-linux-amd64.tar.xz | awk '{ print $1 }')" > xray-linux-amd64.tar.xz.dgst
+        echo "SHA1= $(sha1sum xray-linux-amd64.tar.xz | awk '{ print $1 }')" >> xray-linux-amd64.tar.xz.dgst
+        echo "SHA2-256= $(sha256sum xray-linux-amd64.tar.xz | awk '{ print $1 }')" >> xray-linux-amd64.tar.xz.dgst
+        echo "SHA2-512= $(sha512sum xray-linux-amd64.tar.xz | awk '{ print $1 }')" >> xray-linux-amd64.tar.xz.dgst
+        echo "MD5= $(md5sum xray-linux-amd64 | awk '{ print $1 }')" > xray-linux-amd64.dgst
+        echo "SHA1= $(sha1sum xray-linux-amd64 | awk '{ print $1 }')" >> xray-linux-amd64.dgst
+        echo "SHA2-256= $(sha256sum xray-linux-amd64 | awk '{ print $1 }')" >> xray-linux-amd64.dgst
+        echo "SHA2-512= $(sha512sum xray-linux-amd64 | awk '{ print $1 }')" >> xray-linux-amd64.dgst
 
-      - name: Show workflow information
-        run: |
-          _NAME=${{ matrix.patch-assetname }}
-          [ -n "$_NAME" ] || _NAME=$(jq ".[\"$GOOS-$GOARCH$GOARM$GOMIPS\"].friendlyName" -r < .github/build/friendly-filenames.json)
-          echo "GOOS: $GOOS, GOARCH: $GOARCH, GOARM: $GOARM, GOMIPS: $GOMIPS, RELEASE_NAME: $_NAME"
-          echo "ASSET_NAME=$_NAME" >> $GITHUB_ENV
+    - name: Build for AMD64v2
+      run: |
+        cd Xray-core
+        go env -w CGO_ENABLED=0 GOOS=linux GOARCH=amd64 GOAMD64=v2
+        go build -v -o xray-linux-amd64v2 -trimpath -ldflags "-s -w -buildid=" ./main
+        tar -cJvf xray-linux-amd64v2.tar.xz xray-linux-amd64v2
+        upx -9 xray-linux-amd64v2
+        echo "MD5= $(md5sum xray-linux-amd64v2.tar.xz | awk '{ print $1 }')" > xray-linux-amd64v2.tar.xz.dgst
+        echo "SHA1= $(sha1sum xray-linux-amd64v2.tar.xz | awk '{ print $1 }')" >> xray-linux-amd64v2.tar.xz.dgst
+        echo "SHA2-256= $(sha256sum xray-linux-amd64v2.tar.xz | awk '{ print $1 }')" >> xray-linux-amd64v2.tar.xz.dgst
+        echo "SHA2-512= $(sha512sum xray-linux-amd64v2.tar.xz | awk '{ print $1 }')" >> xray-linux-amd64v2.tar.xz.dgst
+        echo "MD5= $(md5sum xray-linux-amd64v2 | awk '{ print $1 }')" > xray-linux-amd64v2.dgst
+        echo "SHA1= $(sha1sum xray-linux-amd64v2 | awk '{ print $1 }')" >> xray-linux-amd64v2.dgst
+        echo "SHA2-256= $(sha256sum xray-linux-amd64v2 | awk '{ print $1 }')" >> xray-linux-amd64v2.dgst
+        echo "SHA2-512= $(sha512sum xray-linux-amd64v2 | awk '{ print $1 }')" >> xray-linux-amd64v2.dgst
 
-      - name: Set up Go
-        uses: actions/setup-go@v5
-        with:
-          go-version-file: go.mod
-          check-latest: true
+    - name: Build for AMD64v3
+      run: |
+        cd Xray-core
+        go env -w CGO_ENABLED=0 GOOS=linux GOARCH=amd64 GOAMD64=v3
+        go build -v -o xray-linux-amd64v3 -trimpath -ldflags "-s -w -buildid=" ./main
+        tar -cJvf xray-linux-amd64v3.tar.xz xray-linux-amd64v3
+        upx -9 xray-linux-amd64v3
+        echo "MD5= $(md5sum xray-linux-amd64v3.tar.xz | awk '{ print $1 }')" > xray-linux-amd64v3.tar.xz.dgst
+        echo "SHA1= $(sha1sum xray-linux-amd64v3.tar.xz | awk '{ print $1 }')" >> xray-linux-amd64v3.tar.xz.dgst
+        echo "SHA2-256= $(sha256sum xray-linux-amd64v3.tar.xz | awk '{ print $1 }')" >> xray-linux-amd64v3.tar.xz.dgst
+        echo "SHA2-512= $(sha512sum xray-linux-amd64v3.tar.xz | awk '{ print $1 }')" >> xray-linux-amd64v3.tar.xz.dgst
+        echo "MD5= $(md5sum xray-linux-amd64v3 | awk '{ print $1 }')" > xray-linux-amd64v3.dgst
+        echo "SHA1= $(sha1sum xray-linux-amd64v3 | awk '{ print $1 }')" >> xray-linux-amd64v3.dgst
+        echo "SHA2-256= $(sha256sum xray-linux-amd64v3 | awk '{ print $1 }')" >> xray-linux-amd64v3.dgst
+        echo "SHA2-512= $(sha512sum xray-linux-amd64v3 | awk '{ print $1 }')" >> xray-linux-amd64v3.dgst
 
-      - name: Get project dependencies
-        run: go mod download
+    - name: Build for ARM64
+      run: |
+        cd Xray-core
+        go env -w CGO_ENABLED=0 GOOS=linux GOARCH=arm64
+        go build -v -o xray-linux-arm64 -trimpath -ldflags "-s -w -buildid=" ./main
+        tar -cJvf xray-linux-arm64.tar.xz xray-linux-arm64
+        upx -9 xray-linux-arm64
+        echo "MD5= $(md5sum xray-linux-arm64.tar.xz | awk '{ print $1 }')" > xray-linux-arm64.tar.xz.dgst
+        echo "SHA1= $(sha1sum xray-linux-arm64.tar.xz | awk '{ print $1 }')" >> xray-linux-arm64.tar.xz.dgst
+        echo "SHA2-256= $(sha256sum xray-linux-arm64.tar.xz | awk '{ print $1 }')" >> xray-linux-arm64.tar.xz.dgst
+        echo "SHA2-512= $(sha512sum xray-linux-arm64.tar.xz | awk '{ print $1 }')" >> xray-linux-arm64.tar.xz.dgst
+        echo "MD5= $(md5sum xray-linux-arm64 | awk '{ print $1 }')" > xray-linux-arm64.dgst
+        echo "SHA1= $(sha1sum xray-linux-arm64 | awk '{ print $1 }')" >> xray-linux-arm64.dgst
+        echo "SHA2-256= $(sha256sum xray-linux-arm64 | awk '{ print $1 }')" >> xray-linux-arm64.dgst
+        echo "SHA2-512= $(sha512sum xray-linux-arm64 | awk '{ print $1 }')" >> xray-linux-arm64.dgst
 
-      - name: Build Xray
-        run: |
-          mkdir -p build_assets
-          COMMID=$(git describe --always --dirty)
-          if [[ ${GOOS} == 'windows' ]]; then
-            echo 'Building Xray for Windows...'
-            go build -o build_assets/xray.exe -trimpath -buildvcs=false -ldflags="-X github.com/xtls/xray-core/core.build=${COMMID} -s -w -buildid=" -v ./main
-            echo 'CreateObject("Wscript.Shell").Run "xray.exe -config config.json",0' > build_assets/xray_no_window.vbs
-            echo 'Start-Process -FilePath ".\xray.exe" -ArgumentList "-config .\config.json" -WindowStyle Hidden' > build_assets/xray_no_window.ps1
-            # The line below is for without running conhost.exe version. Commented for not being used. Provided for reference.
-            # go build -o build_assets/wxray.exe -trimpath -buildvcs=false -ldflags="-H windowsgui -X github.com/xtls/xray-core/core.build=${COMMID} -s -w -buildid=" -v ./main
-          else
-            echo 'Building Xray...'
-            go build -o build_assets/xray -trimpath -buildvcs=false -ldflags="-X github.com/xtls/xray-core/core.build=${COMMID} -s -w -buildid=" -v ./main
-            if [[ ${GOARCH} == 'mips' || ${GOARCH} == 'mipsle' ]]; then
-              echo 'Building soft-float Xray for MIPS/MIPSLE 32-bit...'
-              GOMIPS=softfloat go build -o build_assets/xray_softfloat -trimpath -buildvcs=false -ldflags="-X github.com/xtls/xray-core/core.build=${COMMID} -s -w -buildid=" -v ./main
-            fi
-          fi
+    - name: Delete current release assets
+      uses: andreaswilli/delete-release-assets-action@v3.0.0
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        tag: latest
+        deleteOnlyFromDrafts: false
 
-      - name: Restore Geodat Cache
-        uses: actions/cache/restore@v4
-        with:
-          path: resources
-          key: xray-geodat-
-
-      - name: Copy README.md & LICENSE
-        run: |
-          mv -f resources/* build_assets
-          cp ${GITHUB_WORKSPACE}/README.md ./build_assets/README.md
-          cp ${GITHUB_WORKSPACE}/LICENSE ./build_assets/LICENSE
-
-      - name: Create ZIP archive
-        if: github.event_name == 'release'
-        shell: bash
-        run: |
-          pushd build_assets || exit 1
-          touch -mt $(date +%Y01010000) *
-          zip -9vr ../Xray-${{ env.ASSET_NAME }}.zip .
-          popd || exit 1
-          FILE=./Xray-${{ env.ASSET_NAME }}.zip
-          DGST=$FILE.dgst
-          for METHOD in {"md5","sha1","sha256","sha512"}
-          do
-            openssl dgst -$METHOD $FILE | sed 's/([^)]*)//g' >>$DGST
-          done
-
-      - name: Change the name
-        run: |
-          mv build_assets Xray-${{ env.ASSET_NAME }}
-
-      - name: Upload files to Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: Xray-${{ env.ASSET_NAME }}
-          path: |
-            ./Xray-${{ env.ASSET_NAME }}/*
-
-      - name: Upload binaries to release
-        uses: svenstaro/upload-release-action@v2
-        if: github.event_name == 'release'
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: ./Xray-${{ env.ASSET_NAME }}.zip*
-          tag: ${{ github.ref }}
-          file_glob: true
+    - name: Create and Upload Release
+      id: upload_release
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        release_name: ${{env.release_title}}
+        tag: latest
+        body: |
+          Latest commit from the main branch:
+          https://github.com/XTLS/Xray-core/commit/${{env.release_commits}}
+        file_glob: true
+        overwrite: true
+        file: ./Xray-core/xray-*
