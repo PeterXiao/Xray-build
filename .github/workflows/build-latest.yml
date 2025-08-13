@@ -36,7 +36,7 @@ jobs:
     - name: Build for AMD64
       run: |
         cd Xray-core
-        go env -w CGO_ENABLED=0 GOOS=linux GOARCH=amd64
+        go env -w CGO_ENABLED=0 GOOS=windows GOARCH=amd64
         go build -v -o xray-linux-amd64 -trimpath -ldflags "-s -w -buildid=" ./main
         tar -cJvf xray-linux-amd64.tar.xz xray-linux-amd64
         upx -9 xray-linux-amd64
@@ -52,7 +52,7 @@ jobs:
     - name: Build for AMD64v2
       run: |
         cd Xray-core
-        go env -w CGO_ENABLED=0 GOOS=linux GOARCH=amd64 GOAMD64=v2
+        go env -w CGO_ENABLED=0 GOOS=windows GOARCH=amd64 GOAMD64=v2
         go build -v -o xray-linux-amd64v2 -trimpath -ldflags "-s -w -buildid=" ./main
         tar -cJvf xray-linux-amd64v2.tar.xz xray-linux-amd64v2
         upx -9 xray-linux-amd64v2
@@ -68,7 +68,7 @@ jobs:
     - name: Build for AMD64v3
       run: |
         cd Xray-core
-        go env -w CGO_ENABLED=0 GOOS=linux GOARCH=amd64 GOAMD64=v3
+        go env -w CGO_ENABLED=0 GOOS=windows GOARCH=amd64 GOAMD64=v3
         go build -v -o xray-linux-amd64v3 -trimpath -ldflags "-s -w -buildid=" ./main
         tar -cJvf xray-linux-amd64v3.tar.xz xray-linux-amd64v3
         upx -9 xray-linux-amd64v3
@@ -84,7 +84,7 @@ jobs:
     - name: Build for ARM64
       run: |
         cd Xray-core
-        go env -w CGO_ENABLED=0 GOOS=linux GOARCH=arm64
+        go env -w CGO_ENABLED=0 GOOS=windows GOARCH=arm64
         go build -v -o xray-linux-arm64 -trimpath -ldflags "-s -w -buildid=" ./main
         tar -cJvf xray-linux-arm64.tar.xz xray-linux-arm64
         upx -9 xray-linux-arm64
