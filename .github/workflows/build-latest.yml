@@ -38,7 +38,7 @@ jobs:
         cd Xray-core
         go env -w CGO_ENABLED=0 GOOS=windows GOARCH=amd64
         go build -v -o xray-windows-amd64 -trimpath -ldflags "-s -w -buildid=" ./main
-        tar -cJvf xray-windows-amd64.tar.xz xray-windows-amd64.exe
+        tar -cJvf xray-windows-amd64.tar.xz xray-windows-amd64
         upx -9 xray-linux-amd64
         echo "MD5= $(md5sum xray-linux-amd64.tar.xz | awk '{ print $1 }')" > xray-linux-amd64.tar.xz.dgst
         echo "SHA1= $(sha1sum xray-linux-amd64.tar.xz | awk '{ print $1 }')" >> xray-linux-amd64.tar.xz.dgst
@@ -54,7 +54,7 @@ jobs:
         cd Xray-core
         go env -w CGO_ENABLED=0 GOOS=windows GOARCH=amd64 GOAMD64=v2
         go build -v -o xray-windows-amd64v2 -trimpath -ldflags "-s -w -buildid=" ./main
-        tar -cJvf xray-windows-amd64v2.tar.xz xray-windows-amd64v2.exe
+        tar -cJvf xray-windows-amd64v2.tar.xz xray-windows-amd64v2
         upx -9 xray-linux-amd64v2
         echo "MD5= $(md5sum xray-linux-amd64v2.tar.xz | awk '{ print $1 }')" > xray-linux-amd64v2.tar.xz.dgst
         echo "SHA1= $(sha1sum xray-linux-amd64v2.tar.xz | awk '{ print $1 }')" >> xray-linux-amd64v2.tar.xz.dgst
@@ -70,7 +70,7 @@ jobs:
         cd Xray-core
         go env -w CGO_ENABLED=0 GOOS=windows GOARCH=amd64 GOAMD64=v3
         go build -v -o xray-windows-amd64v3 -trimpath -ldflags "-s -w -buildid=" ./main
-        tar -cJvf xray-windows-amd64v3.tar.xz xray-windows-amd64v3.exe
+        tar -cJvf xray-windows-amd64v3.tar.xz xray-windows-amd64v3
         upx -9 xray-linux-amd64v3
         echo "MD5= $(md5sum xray-linux-amd64v3.tar.xz | awk '{ print $1 }')" > xray-linux-amd64v3.tar.xz.dgst
         echo "SHA1= $(sha1sum xray-linux-amd64v3.tar.xz | awk '{ print $1 }')" >> xray-linux-amd64v3.tar.xz.dgst
