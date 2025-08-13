@@ -37,8 +37,8 @@ jobs:
       run: |
         cd Xray-core
         go env -w CGO_ENABLED=0 GOOS=windows GOARCH=amd64
-        go build -v -o xray-windows-amd64 -trimpath -ldflags "-s -w -buildid=" ./main
-        tar -cJvf xray-windows-amd64.tar.xz xray-windows-amd64
+        go build -v -o xray-windows-amd64.exe -trimpath -ldflags "-s -w -buildid=" ./main
+        tar -cJvf xray-windows-amd64.tar.xz xray-windows-amd64.exe
         echo "MD5= $(md5sum xray-linux-amd64.tar.xz | awk '{ print $1 }')" > xray-linux-amd64.tar.xz.dgst
         echo "SHA1= $(sha1sum xray-linux-amd64.tar.xz | awk '{ print $1 }')" >> xray-linux-amd64.tar.xz.dgst
         echo "SHA2-256= $(sha256sum xray-linux-amd64.tar.xz | awk '{ print $1 }')" >> xray-linux-amd64.tar.xz.dgst
@@ -52,8 +52,8 @@ jobs:
       run: |
         cd Xray-core
         go env -w CGO_ENABLED=0 GOOS=windows GOARCH=amd64 GOAMD64=v2
-        go build -v -o xray-windows-amd64v2 -trimpath -ldflags "-s -w -buildid=" ./main
-        tar -cJvf xray-windows-amd64v2.tar.xz xray-windows-amd64v2
+        go build -v -o xray-windows-amd64v2.exe -trimpath -ldflags "-s -w -buildid=" ./main
+        tar -cJvf xray-windows-amd64v2.tar.xz xray-windows-amd64v2.exe
         echo "MD5= $(md5sum xray-linux-amd64v2.tar.xz | awk '{ print $1 }')" > xray-linux-amd64v2.tar.xz.dgst
         echo "SHA1= $(sha1sum xray-linux-amd64v2.tar.xz | awk '{ print $1 }')" >> xray-linux-amd64v2.tar.xz.dgst
         echo "SHA2-256= $(sha256sum xray-linux-amd64v2.tar.xz | awk '{ print $1 }')" >> xray-linux-amd64v2.tar.xz.dgst
@@ -67,8 +67,8 @@ jobs:
       run: |
         cd Xray-core
         go env -w CGO_ENABLED=0 GOOS=windows GOARCH=amd64 GOAMD64=v3
-        go build -v -o xray-windows-amd64v3 -trimpath -ldflags "-s -w -buildid=" ./main
-        tar -cJvf xray-windows-amd64v3.tar.xz xray-windows-amd64v3
+        go build -v -o xray-windows-amd64v3.exe -trimpath -ldflags "-s -w -buildid=" ./main
+        tar -cJvf xray-windows-amd64v3.tar.xz xray-windows-amd64v3.exe
         echo "MD5= $(md5sum xray-linux-amd64v3.tar.xz | awk '{ print $1 }')" > xray-linux-amd64v3.tar.xz.dgst
         echo "SHA1= $(sha1sum xray-linux-amd64v3.tar.xz | awk '{ print $1 }')" >> xray-linux-amd64v3.tar.xz.dgst
         echo "SHA2-256= $(sha256sum xray-linux-amd64v3.tar.xz | awk '{ print $1 }')" >> xray-linux-amd64v3.tar.xz.dgst
